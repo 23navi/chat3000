@@ -43,7 +43,7 @@ export async function creatSessionHandler(req: Request<{}, {}, CreateSessionInpu
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
   });
   res.cookie('refresh_token', refreshToken);
-  res.send({ accessToken, refreshToken });
+  res.send({ accessToken, refreshToken, user });
 }
 
 export async function refreshSessionHandler(req: Request, res: Response) {
