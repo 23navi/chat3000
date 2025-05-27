@@ -4,11 +4,20 @@ import { CreateUserInput } from '../schemas/user.schema';
 import User from '../models/user.model';
 import { ResourceAlreadyExistError } from '../errors';
 import jwt from 'jsonwebtoken';
-import ejs from 'ejs';
-import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const registerUser = async (req: Request<{}, {}, CreateUserInput>, res: Response, next: NextFunction) => {
-  const { name, email, password, username } = req.body;
+  const { email, password, } = req.body;
+  let { name, username } = req.body
+
+  const someRandomUuid = uuidv4();
+  if (!name) {
+    name = `RandomName${someRandomUuid}`
+  }
+  if (!username) {
+    username = someRandomUuid
+  }
 
   const existingUser = await User.findOne({ $or: [{ email: email }, { username: username }] });
 
@@ -26,35 +35,11 @@ const registerUser = async (req: Request<{}, {}, CreateUserInput>, res: Response
     username,
   });
 
-  const verificationDetails = createValidation(newUser.email);
-
-  newUser.verificationOTP = verificationDetails.otp;
-  newUser.verificationOTPExpiration = new Date(verificationDetails.expiryTimeInMs);
-
-  const ejsHtml = await ejs.renderFile(path.join(__dirname, '..', 'mails', 'activation-mail.ejs'), {
-    otpValidity: verificationDetails.otpValidity,
-    otp: verificationDetails.otp,
-    username: newUser.username,
-  });
-
-  // Not sending email in dev mode.
-  console.log({ OTP: verificationDetails.otp });
-  // sendEmail({
-  //   from: 'navisureka23@gmail.com',
-  //   to: newUser.email,
-  //   subject: 'Please verify your email',
-  //   // text: 'Test',
-  //   html: ejsHtml,
-  // });
-
   await newUser.save();
 
   return res.status(201).json({ user: newUser });
 
-  // This is already handled by zod
-  //   if (password !== passwordConfirmation) {
-  //     return res.status(400).json({ message: "Passwords do not match" });
-  //   }
+
 };
 
 const currentUser = async (req: Request, res: Response, next: NextFunction) => {

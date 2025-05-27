@@ -56,10 +56,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    passwordLastModified: {
-      type: Date,
-      default: Date.now(),
-    },
     name: {
       type: String,
       required: true,
@@ -72,32 +68,6 @@ const userSchema = new mongoose.Schema(
       url: String,
       public_id: String,
     },
-    isVerified: {
-      type: Boolean,
-      default: true, // DEVELOPMENT only
-    },
-    verificationOTP: {
-      type: Number,
-      required: false,
-    },
-    verificationOTPExpiration: {
-      type: Date,
-      default: Date.now(),
-      required: false,
-    },
-    passwordChangeOTP: {
-      type: Number,
-      required: false,
-    },
-    passwordChangeOTPExpiration: {
-      type: Date,
-      default: Date.now(),
-      required: false,
-    },
-    passwordChangedAt: {
-      type: Date,
-      default: Date.now(),
-    },
   },
   {
     // This will remove __v and password from the return of user, when we do user.toJson()
@@ -105,12 +75,6 @@ const userSchema = new mongoose.Schema(
       transform(doc, ret) {
         delete ret.password;
         delete ret.__v;
-        delete ret.passwordLastModified;
-        delete ret.isVerified;
-        delete ret.passwordChangedAt;
-        delete ret.verificationOTP;
-        delete ret.verificationOTPExpiration;
-        delete ret.passwordChangeOTPExpiration;
       },
     },
     timestamps: true,
@@ -121,7 +85,6 @@ userSchema.pre<UserDoc>('save', async function (done) {
   if (this.isModified('password')) {
     const hashed = await Password.toHash(this.get('password'));
     this.set('password', hashed);
-    this.set('passwordLastModified', Date.now());
   }
   done();
 });
