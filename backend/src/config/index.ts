@@ -2,9 +2,8 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import { z } from 'zod';
 
-const envPath = `.env.${
-  process.env.NODE_ENV === 'production' ? 'production' : process.env.NODE_ENV === 'staging' ? 'staging' : 'development'
-}`;
+const envPath = `.env.${process.env.NODE_ENV === 'production' ? 'production' : process.env.NODE_ENV === 'staging' ? 'staging' : 'development'
+  }`;
 dotenv.config({ path: path.resolve(envPath) });
 
 const envSchema = z.object({
@@ -13,7 +12,10 @@ const envSchema = z.object({
   CLOUDINARY_CLOUD_NAME: z.string().min(1),
   CLOUDINARY_API_KEY: z.string().min(1),
   CLOUDINARY_SECRET_KEY: z.string().min(1),
-  CORS_ORIGIN_LIST: z.string().min(1),
+  CORS_ORIGIN_LIST: z
+    .string()
+    .min(1)
+    .transform((val) => val.split(',').map((s) => s.trim())), // <-- convert comma-separated string to array
   NODE_ENV: z.enum(['production', 'development', 'staging']).default('development'),
   SMTP_PASSWORD: z.string().min(1),
   SMTP_USER: z.string().min(1),

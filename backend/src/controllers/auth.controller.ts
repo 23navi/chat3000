@@ -18,9 +18,6 @@ export async function creatSessionHandler(req: Request<{}, {}, CreateSessionInpu
   if (!user) {
     throw new BadRequestError('Email/password not correct');
   }
-  if (!user.isVerified) {
-    throw new ForbiddenRequestError('Verify your account first');
-  }
   if (!(await Password.compare(user.password, candidatePassword))) {
     throw new BadRequestError('Email/password not correct');
   }
