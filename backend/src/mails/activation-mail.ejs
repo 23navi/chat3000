@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification OTP</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #007bff;
+      }
+
+      p {
+        margin-bottom: 10px;
+      }
+
+      .otp {
+        font-size: 24px;
+        color: #28a745;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Hello <%= username %>,</h1>
+      <p>Your verification OTP is: <span class="otp"><%= otp %></span></p>
+      <p>This OTP is valid for <%= otpValidity %> minutes.</p>
+      <p>Thank you!</p>
+    </div>
+  </body>
+</html>
