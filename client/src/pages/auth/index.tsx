@@ -8,9 +8,14 @@ import { useState } from "react";
 import apiClient from "@/lib/api-client";
 import { LOGIN_ROUTE, SIGNUP_ROUTE } from "@/lib/constants";
 import { useNavigate } from "react-router-dom";
+import { useAppStore } from "@/store";
+
+// Once we have logged in, we will have the jwt in cookie, and we will be sending that cookie with all the request automatically.
+// We will store the user info in state using zustand, that user info will be used to display things on /profile and other pages. But if the page reloads, the user will be redirected to /profile and a /me api call will be made with stored cookie to get user details and then that info will be stored back in zustand user info state.
 
 export const Auth = () => {
   const navigate = useNavigate();
+  const { setUserInfo } = useAppStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,8 +56,10 @@ export const Auth = () => {
           { email, password },
           { withCredentials: true }
         );
+
+        // If the user has profileSetup done, we will directly redirect them to chat, else to /profile to make them setup their profile.
         if (response.data.user.id) {
-          // setUserInfo(response.data.user);
+          setUserInfo(response.data.user);
           if (response.data.user.profileSetup) navigate("/chat");
           else navigate("/profile");
         } else {
@@ -77,6 +84,7 @@ export const Auth = () => {
           { withCredentials: true }
         );
         if (response.status === 201) {
+          // When creating the user, we are not sending the jwt as cookie from backend, so the user will have to login again. (In future, the user will have to verify the email.)
           // setUserInfo(response.data.user);
           navigate("/auth");
         }
