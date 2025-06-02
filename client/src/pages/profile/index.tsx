@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "@/lib/api-client";
 import { AxiosError } from "axios";
+import { useAppStore } from "@/store";
 
 interface UserProfile {
   id: string;
@@ -13,6 +14,11 @@ export const Profile = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  //Note: userInfo will be null if the user refreshes the page.
+  const { userInfo } = useAppStore();
+
+  console.log({ userInfo });
 
   useEffect(() => {
     const fetchProfile = async () => {
