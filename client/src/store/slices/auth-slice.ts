@@ -9,7 +9,7 @@ export type UserInfo = {
 
 export type AuthSlice = {
     userInfo: UserInfo | null
-    setUserInfo: (userInfo: UserInfo) => void
+    setUserInfo: (userInfo: UserInfo | undefined) => void
     clearUserInfo: () => void
 }
 
