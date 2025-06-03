@@ -1,13 +1,15 @@
 import { type StateCreator } from 'zustand'
 
 export type UserInfo = {
+    id: string
     name: string
     email: string
+    profileSetup: boolean
 }
 
 export type AuthSlice = {
     userInfo: UserInfo | null
-    setUserInfo: (userInfo: UserInfo) => void
+    setUserInfo: (userInfo: UserInfo | undefined) => void
     clearUserInfo: () => void
 }
 

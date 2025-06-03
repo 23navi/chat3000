@@ -32,6 +32,7 @@ export interface UserDoc extends mongoose.Document {
     url: string;
   };
   role: string;
+  profileSetup: boolean;
 }
 
 // This is the schema for the User but not the typescript schema
@@ -62,6 +63,7 @@ const userSchema = new mongoose.Schema(
       url: String,
       public_id: String,
     },
+    profileSetup: { type: Boolean, default: false }
   },
   {
     // This will remove __v and password from the return of user, when we do user.toJson()
